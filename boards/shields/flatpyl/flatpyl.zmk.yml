@@ -1,0 +1,12 @@
+file_format: "1"
+id: flatpyl
+name: Flatpyl
+type: shield
+url: https://github.com/klausweiss/flatpyl/
+requires: [xiao]
+exposes: []
+features:
+  - keys
+siblings:
+  - flatpyl_left
+  - flatpyl_right

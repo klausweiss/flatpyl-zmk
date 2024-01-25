@@ -1,0 +1,6 @@
+config SHIELD_FLATPYL_LEFT
+    def_bool $(shields_list_contains,flatpyl_left)
+
+config SHIELD_FLATPYL_RIGHT
+    def_bool $(shields_list_contains,flatpyl_right)
+
