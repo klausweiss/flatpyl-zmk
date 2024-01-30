@@ -3,17 +3,177 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 
+#define DEFAULT 0
+#define NAV 1
+#define NUMBERS 2
+#define FKEYS 3
+#define SYM_1 4
+#define SYM_2 5
+#define SYSTEM 6
+#define CONFIG 7
+
 / {
+
+    behaviors {
+        mt2: require_prior_idle_mod_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <200>;
+            require-prior-idle-ms = <125>;
+            bindings = <&kp>, <&kp>;
+        };
+        lt2: require_prior_idle_momentary_layer {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <200>;
+            require-prior-idle-ms = <125>;
+            bindings = <&mo>, <&kp>;
+        };
+        colon: flipped_colon {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp COLON>, <&kp SEMICOLON>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+        slashes: both_slashes {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp SLASH>, <&kp BACKSLASH>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+        slashpipe: both_slashes_and_pipe {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&slashes>, <&kp PIPE>;
+            mods = <(MOD_RALT)>;
+        };
+        quexcl: question_exclam_mark {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp QUESTION>, <&kp EXCL>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+        bspcdel: backspace_delete {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp BSPC>, <&kp DEL>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+        quotes: super_apostrophe {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp APOSTROPHE>, <&kp GRAVE>;
+            mods = <(MOD_RALT)>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
         default_layer {
             bindings = <
-    &sys_reset    &bt BT_SEL 0    &out OUT_BLE    &kp E     &kp R     &kp T                              &kp Y     &kp U     &kp I     &kp O     &kp P    &bootloader
-    &bootloader    &kp A    &kp S    &kp R     &kp F     &kp G                              &kp H     &kp J     &kp K     &kp L     &kp SEMI &kp SQT
-               &kp Z    &kp X    &kp C     &kp V     &kp B                              &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH
-                                           &kp DEL   &kp RET    &kp SPACE     &kp RET   &kp SPACE &kp BSPC
+                &colon      &kp B       &kp L         &kp D        &kp W       &kp Q              &quotes   &kp F          &lt2 FKEYS O   &kp U        &kp J       &quexcl
+                &slashpipe  &mt2 LGUI N &mt2 LSHFT R  &mt2 LCTRL T &mt2 LALT S &kp G              &kp Y     &mt2 LALT H    &mt2 RCTRL A   &mt2 RSHFT E &mt2 LGUI I &kp EQUAL
+                            &kp Z       &lt2 SYSTEM X &lt2 SYM_2 M &lt2 NAV C  &kp V              &kp K     &lt2 NUMBERS P &lt2 SYM_1 DOT &kp MINUS    &kp COMMA
+
+                                                           &kp ENTER &kp SPACE  &kp TAB           &mt2 RALT ESC  &kp RSHIFT  &bspcdel  
             >;
+        };
+
+        nav_layer {
+            bindings = <
+                &none         &none    &none    &none     &none     &none              &none          &kp HOME  &kp PG_DN &kp PG_UP &kp END   &none
+                &none         &kp LGUI &kp LSFT &kp LCTRL &kp LALT  &none              &none          &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT &none
+                              &none    &none    &none     &none     &none              &none          &none     &none     &none     &none
+
+                                                    &trans  &trans  &trans             &trans  &trans  &trans
+            >;
+        };
+
+        numbers_layer {
+            bindings = <
+                &none         &none    &kp N7   &kp N8    &kp N9    &none              &none          &none     &none     &none     &none     &none
+                &none         &none    &kp N4   &kp N5    &kp N6    &none              &none          &kp LALT  &kp RCTL  &kp RSHFT &kp LGUI  &none
+                              &none    &kp N1   &kp N2    &kp N3    &none              &kp DOT        &none     &none     &none     &none
+
+                                                    &kp N0  &trans  &trans             &trans  &trans  &trans
+            >;
+        };
+
+        fkeys_layer {
+            bindings = <
+                &none         &none    &kp F7   &kp F8    &kp F9    &kp F10            &none          &none     &none     &none     &none     &none
+                &none         &none    &kp F4   &kp F5    &kp F6    &kp F11            &none          &kp LALT  &kp RCTL  &kp RSHFT &kp LGUI  &none
+                              &none    &kp F1   &kp F2    &kp F3    &kp F12            &none          &none     &none     &none     &none
+
+                                                    &trans  &trans  &trans             &trans  &trans  &trans
+            >;
+        };
+
+        symbols_layer_1 {
+            bindings = <
+                &none         &none    &kp AMPERSAND &kp ASTERISK &none     &none              &none          &none     &none     &none     &none     &none
+                &none         &none    &kp DOLLAR    &kp PERCENT  &kp CARET &none              &none          &kp LALT  &kp RCTL  &kp RSHFT &kp LGUI  &none
+                              &none    &kp EXCL      &kp AT       &kp HASH  &none              &none          &none     &none     &none     &none
+
+                                                     &trans  &trans  &trans                    &trans  &trans  &trans
+            >;
+        };
+
+        symbols_layer_2 {
+            bindings = <
+                &none         &none    &none    &none     &none     &none              &none   &kp LBRC  &kp RBRC  &none     &none     &none
+                &none         &kp LGUI &kp LSFT &kp LCTRL &kp LALT  &none              &none   &kp LBKT  &kp RBKT  &kp LT    &kp GT    &none
+                              &none    &none    &none     &none     &none              &none   &kp LPAR  &kp RPAR  &kp TILDE &slashes
+
+                                                    &trans  &trans  &trans             &trans  &trans  &trans
+            >;
+        };
+
+        system_layer {
+            bindings = <
+                &none         &none        &none        &none        &none        &none                  &none          &kp C_BRI_UP &kp K_VOL_UP &none     &none     &none
+                &none         &none        &none        &none        &none        &none                  &none          &kp C_BRI_DN &kp K_VOL_DN &none     &none     &none
+                              &none        &none        &none        &none        &none                  &none          &kp PSCRN    &kp K_MUTE   &none     &none
+
+                                                                  &trans  &trans  &trans                 &trans  &trans  &trans
+            >;
+        };
+
+        config_layer {
+            bindings = <
+                &to DEFAULT   &out OUT_USB &out OUT_BLE &none        &sys_reset   &bootloader            &bootloader    &sys_reset &none     &none     &none     &bt BT_CLR_ALL
+                &none         &bt BT_CLR   &none        &none        &none        &none                  &none          &none      &none     &none     &none     &none
+                              &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4           &none          &none      &none     &none     &none
+
+                                                                  &trans  &trans  &trans                 &trans  &trans  &trans
+            >;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+
+        combo_esc {
+            timeout-ms = <50>;
+            key-positions = <26 27>;
+            bindings = <&kp ESC>;
+        };
+
+        combo_backspace {
+            timeout-ms = <50>;
+            key-positions = <19 20>;
+            bindings = <&bspcdel>;
+        };
+
+        combo_config_layer {
+            timeout-ms = <50>;
+            key-positions = <0 1 12 13>;
+            bindings = <&to CONFIG>;
         };
     };
 };

@@ -1,7 +1,7 @@
 if SHIELD_FLATPYL_LEFT
 
 config ZMK_KEYBOARD_NAME
-    default "flatpyl kb"
+    default "Flatpyl Keyboard"
 
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
