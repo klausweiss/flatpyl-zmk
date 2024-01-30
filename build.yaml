@@ -18,7 +18,7 @@
 #
 ---
 include:
-  - board: xiao
+  - board: seeeduino_xiao_ble
     shield: flatpyl_left
-  - board: xiao
+  - board: seeeduino_xiao_ble
     shield: flatpyl_right
