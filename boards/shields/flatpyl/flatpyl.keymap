@@ -3,14 +3,20 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 
+// layers
 #define DEFAULT 0
-#define NAV 1
-#define NUMBERS 2
-#define FKEYS 3
-#define SYM_1 4
-#define SYM_2 5
-#define SYSTEM 6
-#define CONFIG 7
+#define GRAPHITE 1
+#define NAV 2
+#define NUMBERS 3
+#define FKEYS 4
+#define SYM_1 5
+#define SYM_2 6
+#define SYSTEM 7
+#define CONFIG 8
+
+// timings
+#define REQUIRE_PRIOR_IDLE_MS 125
+#define ADAPTIVE_KEY_TIMEOUT 300
 
 / {
 
@@ -21,7 +27,7 @@
             flavor = "tap-preferred";
             tapping-term-ms = <200>;
             quick-tap-ms = <200>;
-            require-prior-idle-ms = <125>;
+            require-prior-idle-ms = <REQUIRE_PRIOR_IDLE_MS>;
             bindings = <&kp>, <&kp>;
         };
         lt2: require_prior_idle_momentary_layer {
@@ -30,7 +36,7 @@
             flavor = "tap-preferred";
             tapping-term-ms = <200>;
             quick-tap-ms = <200>;
-            require-prior-idle-ms = <125>;
+            require-prior-idle-ms = <REQUIRE_PRIOR_IDLE_MS>;
             bindings = <&mo>, <&kp>;
         };
         colon: flipped_colon {
@@ -69,6 +75,15 @@
             bindings = <&kp APOSTROPHE>, <&kp GRAVE>;
             mods = <(MOD_RALT)>;
         };
+        magic: magic_key {
+            compatible = "zmk,behavior-antecedent-morph";
+            label = "magic_key";
+            #binding-cells = <0>;
+            max-delay-ms = <ADAPTIVE_KEY_TIMEOUT>;
+            defaults = <&kp MINUS>;
+            antecedents = <P  R  L>;
+            bindings =    <&kp O  &kp L  &kp R>;
+        };
     };
 
     keymap {
@@ -76,11 +91,21 @@
 
         default_layer {
             bindings = <
+                &colon      &kp Q       &kp U         &kp O        &kp Y       &magic             &quotes   &kp B          &lt2 FKEYS P   &kp M        &kp J       &quexcl
+                &slashpipe  &mt2 LGUI L &mt2 LSHFT I  &mt2 LCTRL A &mt2 LALT E &kp W              &kp F     &mt2 LALT T    &mt2 RCTRL N   &mt2 RSHFT S &mt2 LGUI R &kp EQUAL
+                            &kp Z       &lt2 SYSTEM V &lt2 SYM_2 X &lt2 NAV C  &kp COMMA          &kp DOT   &lt2 NUMBERS D &lt2 SYM_1 K   &kp G        &kp H
+
+                                                           &kp ENTER &kp SPACE  &kp TAB           &kp RSHIFT  &bspcdel  &mt RALT ESC  
+            >;
+        };
+
+        graphite_layer {
+            bindings = <
                 &colon      &kp B       &kp L         &kp D        &kp W       &kp Q              &quotes   &kp F          &lt2 FKEYS O   &kp U        &kp J       &quexcl
                 &slashpipe  &mt2 LGUI N &mt2 LSHFT R  &mt2 LCTRL T &mt2 LALT S &kp G              &kp Y     &mt2 LALT H    &mt2 RCTRL A   &mt2 RSHFT E &mt2 LGUI I &kp EQUAL
-                            &kp Z       &lt2 SYSTEM X &lt2 SYM_2 M &lt2 NAV C  &kp V              &kp K     &lt2 NUMBERS P &lt2 SYM_1 DOT &kp MINUS    &kp COMMA
+                            &kp Z       &lt2 SYSTEM X &lt2 SYM_2 M &lt2 NAV C  &kp V              &kp K     &lt2 NUMBERS P &lt2 SYM_1 DOT &magic       &kp COMMA
 
-                                                           &kp ENTER &kp SPACE  &kp TAB           &mt2 RALT ESC  &kp RSHIFT  &bspcdel  
+                                                               &trans  &trans  &trans             &trans  &trans  &trans
             >;
         };
 
@@ -159,13 +184,13 @@
         compatible = "zmk,combos";
 
         combo_esc {
-            timeout-ms = <50>;
-            key-positions = <26 27>;
+            timeout-ms = <25>;
+            key-positions = <15 16>;
             bindings = <&kp ESC>;
         };
 
         combo_backspace {
-            timeout-ms = <50>;
+            timeout-ms = <25>;
             key-positions = <19 20>;
             bindings = <&bspcdel>;
         };
@@ -174,6 +199,12 @@
             timeout-ms = <50>;
             key-positions = <0 1 12 13>;
             bindings = <&to CONFIG>;
+        };
+
+        combo_graphite_layer {
+            timeout-ms = <50>;
+            key-positions = <11 23>;
+            bindings = <&tog GRAPHITE>;
         };
     };
 };
