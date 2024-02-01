@@ -81,8 +81,8 @@
             #binding-cells = <0>;
             max-delay-ms = <ADAPTIVE_KEY_TIMEOUT>;
             defaults = <&kp MINUS>;
-            antecedents = <P  R  L  K  S>;
-            bindings =    <&kp O  &kp L  &kp R  &kp O  &kp C>;
+            antecedents = <P  R  L  K  S  C>;
+            bindings =    <&kp O  &kp L  &kp R  &kp O  &kp C &kp S>;
         };
     };
 
