@@ -184,13 +184,13 @@
         compatible = "zmk,combos";
 
         combo_esc {
-            timeout-ms = <25>;
+            timeout-ms = <35>;
             key-positions = <15 16>;
             bindings = <&kp ESC>;
         };
 
         combo_backspace {
-            timeout-ms = <25>;
+            timeout-ms = <35>;
             key-positions = <19 20>;
             bindings = <&bspcdel>;
         };
